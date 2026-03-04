@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido Especial</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ffe6f7, #f5f5ff);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .tela {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      position: relative;
+    }
+
+    .ativa {
+      display: flex;
+      opacity: 1;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      color: white;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-iniciar {
+      background-color: #c77dff;
+    }
+
+    .sim {
+      background-color: #28a745;
+    }
+
+    .nao {
+      background-color: #dc3545;
+    }
+
+    .piscar-verde {
+      animation: piscar 0.6s ease-in-out 3;
+    }
+
+    @keyframes piscar {
+      0% { background-color: #28a745; }
+      50% { background-color: #6cff8f; }
+      100% { background-color: #28a745; }
+    }
+
+    img {
+      width: 250px;
+      margin-top: 20px;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tela 1 - Inicial -->
+  <div id="tela0" class="tela ativa">
+    <button class="btn-iniciar" onclick="irParaPedido()">
+      Iniciar questionario
+    </button>
+  </div>
+
+  <!-- Tela 2 - Pedido -->
+  <div id="tela1" class="tela">
+    <h1>Quer se casar comigo?</h1>
+    <div class="botoes" id="areaBotoes">
+      <button id="btnSim" class="sim" onclick="clicouSim(this)">Sim</button>
+      <button id="btnNao" class="nao" onclick="clicouNao(this)">Não</button>
+    </div>
+  </div>
+
+  <!-- Tela 3 - Final -->
+  <div id="tela2" class="tela">
+    <h1>Ótimo! Encontro marcado então.</h1>
+    <p><strong>Data:</strong> Sábado, às 21h.<br>
+    Jantar em um restaurante de massas e vinho.</p>
+    <img src="gatito.jpg" alt="Gatinho com flores">
+  </div>
+
+  <script>
+    let cliquesNao = 0;
+
+    function trocarTela(atual, proxima) {
+      document.getElementById(atual).classList.remove('ativa');
+      setTimeout(() => {
+        document.getElementById(proxima).classList.add('ativa');
+      }, 200);
+    }
+
+    function irParaPedido() {
+      trocarTela('tela0', 'tela1');
+    }
+
+    function clicouNao(botao) {
+      cliquesNao++;
+
+      if (cliquesNao === 1) {
+        const area = document.getElementById('areaBotoes');
+        const largura = window.innerWidth - botao.offsetWidth;
+        const novaEsquerda = Math.random() * largura;
+        const novaAltura = Math.random() * (window.innerHeight / 3);
+
+        botao.style.position = 'fixed';
+        botao.style.left = novaEsquerda + 'px';
+        botao.style.top = novaAltura + 'px';
+      } else if (cliquesNao === 2) {
+        const btnSim = document.getElementById('btnSim');
+
+        // Botão NÃO vira SIM
+        botao.innerText = 'Sim';
+        botao.classList.remove('nao');
+        botao.classList.add('sim');
+        botao.classList.add('piscar-verde');
+
+        // Botão SIM original vira NÃO (sem mudar posição)
+        btnSim.innerText = 'Não';
+        btnSim.classList.remove('sim');
+        btnSim.classList.add('nao');
+        btnSim.onclick = null; // impede comportamento inesperado
+
+        setTimeout(() => {
+          trocarTela('tela1', 'tela2');
+        }, 1500);
+      }
+    }
+
+    function clicouSim(botao) {
+      botao.classList.add('piscar-verde');
+      setTimeout(() => {
+        trocarTela('tela1', 'tela2');
+      }, 1500);
+    }
+  </script>
+
+</body>
+</html>
